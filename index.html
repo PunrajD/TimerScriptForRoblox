@@ -7,17 +7,20 @@
     <style>
         body {
             background-color: black;
-            color: white;
+            color: #b8b8b8;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Creepster', cursive, Arial, sans-serif;
         }
         #clock {
             font-size: 8em;
+            font-weight: bold;
+            text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
         }
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
     </style>
     <script>
         let gameTime = "00:00:00";
@@ -27,11 +30,12 @@
             playClickSound();
         }
 
-        async function fetchTimeFromServer() {
+        async function fetchTimeFromTimeIs() {
             try {
-                const response = await fetch('http://localhost:3000/api/time');
+                const response = await fetch('https://worldtimeapi.org/api/timezone/America/New_York');
                 const data = await response.json();
-                gameTime = data.gameTime;
+                const currentTime = new Date(data.datetime);
+                gameTime = currentTime.toLocaleTimeString('en-US', { hour12: false });
                 updateTimeDisplay();
             } catch (error) {
                 console.error('Error fetching time data:', error);
@@ -39,8 +43,8 @@
         }
 
         function startSyncing() {
-            fetchTimeFromServer();
-            setInterval(fetchTimeFromServer, 1000); // Update every second
+            fetchTimeFromTimeIs();
+            setInterval(fetchTimeFromTimeIs, 1000); // Update every second
         }
 
         function playClickSound() {
