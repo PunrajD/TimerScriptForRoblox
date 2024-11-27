@@ -3,12 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Sync with Game</title>
+    <title>Game Timer Clock</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #clock {
+            font-size: 8em;
+        }
+    </style>
     <script>
-        let gameTime = "--:--:--";
+        let gameTime = "00:00:00";
 
         function updateTimeDisplay() {
-            document.getElementById('timeDisplay').textContent = "Game Time: " + gameTime;
+            document.getElementById('clock').textContent = gameTime;
+            playClickSound();
         }
 
         async function fetchTimeFromServer() {
@@ -27,13 +43,15 @@
             setInterval(fetchTimeFromServer, 1000); // Update every second
         }
 
+        function playClickSound() {
+            const audio = new Audio('click.mp3');
+            audio.play();
+        }
+
         window.onload = startSyncing;
     </script>
 </head>
 <body>
-    <div>
-        <h1>Current Game Timer</h1>
-        <p id="timeDisplay">Loading...</p>
-    </div>
+    <div id="clock">00:00:00</div>
 </body>
 </html>
