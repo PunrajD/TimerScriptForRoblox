@@ -24,6 +24,7 @@
     </style>
     <script>
         let gameTime = "00:00:00";
+        let currentTime = null;
 
         function updateTimeDisplay() {
             document.getElementById('clock').textContent = gameTime;
@@ -32,17 +33,12 @@
         async function fetchTimeFromServer() {
             try {
                 console.log('Fetching time from server...');
-                const response = await fetch('https://punrajd.github.io/TimerScriptForRoblox/');
+                const response = await fetch('https://worldtimeapi.org/api/timezone/America/Toronto');
                 if (response.ok) {
-                    console.log('Successfully fetched time from server.');
                     const data = await response.json();
-                    if (data && data.time) {
-                        gameTime = data.time;
-                        updateTimeDisplay();
-                        setTimeout(playClickSound, 500); // Play sound mid-second for better sync
-                    } else {
-                        console.error('Time field not found in response:', data);
-                    }
+                    currentTime = new Date(data.datetime);
+                    updateTimeDisplayFromCurrentTime();
+                    setTimeout(playClickSound, 500); // Play sound mid-second for better sync
                 } else {
                     console.error('Error fetching time data. HTTP Status:', response.status);
                 }
@@ -51,9 +47,18 @@
             }
         }
 
+        function updateTimeDisplayFromCurrentTime() {
+            if (currentTime) {
+                gameTime = currentTime.toLocaleTimeString('en-US', { hour12: false });
+                updateTimeDisplay();
+                currentTime.setSeconds(currentTime.getSeconds() + 1); // Increment by one second
+            }
+        }
+
         function startSyncing() {
-            fetchTimeFromServer(); // Initial call
-            setInterval(fetchTimeFromServer, 30000); // Fetch every 30 seconds to ensure accuracy
+            fetchTimeFromServer(); // Fetch from API initially
+            setInterval(fetchTimeFromServer, 30000); // Fetch from API every 30 seconds
+            setInterval(updateTimeDisplayFromCurrentTime, 1000); // Update locally every second
         }
 
         function playClickSound() {
@@ -61,14 +66,7 @@
             audio.play();
         }
 
-        window.onload = () => {
-            startSyncing();
-            setInterval(() => {
-                const now = new Date();
-                gameTime = now.toLocaleTimeString('en-US', { hour12: false });
-                updateTimeDisplay();
-            }, 1000); // Update the display every second
-        };
+        window.onload = startSyncing;
     </script>
 </head>
 <body>
