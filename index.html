@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Sync with Game</title>
+    <script>
+        let gameTime = "--:--:--";
+
+        function updateTimeDisplay() {
+            document.getElementById('timeDisplay').textContent = "Game Time: " + gameTime;
+        }
+
+        async function fetchTimeFromServer() {
+            try {
+                const response = await fetch('http://localhost:3000/api/time');
+                const data = await response.json();
+                gameTime = data.gameTime;
+                updateTimeDisplay();
+            } catch (error) {
+                console.error('Error fetching time data:', error);
+            }
+        }
+
+        function startSyncing() {
+            fetchTimeFromServer();
+            setInterval(fetchTimeFromServer, 1000); // Update every second
+        }
+
+        window.onload = startSyncing;
+    </script>
+</head>
+<body>
+    <div>
+        <h1>Current Game Timer</h1>
+        <p id="timeDisplay">Loading...</p>
+    </div>
+</body>
+</html>
