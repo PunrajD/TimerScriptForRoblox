@@ -3,73 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Timer Clock</title>
-    <style>
-        body {
-            background-color: black;
-            color: #b8b8b8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Creepster', cursive, Arial, sans-serif;
-        }
-        #clock {
-            font-size: 8em;
-            font-weight: bold;
-            text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
-    </style>
-    <script>
-        let gameTime = "00:00:00";
-        let currentTime = null;
-
-        function updateTimeDisplay() {
-            document.getElementById('clock').textContent = gameTime;
-        }
-
-        async function fetchTimeFromServer() {
-            try {
-                console.log('Fetching time from server...');
-                const response = await fetch('https://worldtimeapi.org/api/timezone/America/Toronto');
-                if (response.ok) {
-                    const data = await response.json();
-                    currentTime = new Date(data.datetime);
-                    updateTimeDisplayFromCurrentTime();
-                    setTimeout(playClickSound, 500); // Play sound mid-second for better sync
-                } else {
-                    console.error('Error fetching time data. HTTP Status:', response.status);
-                }
-            } catch (error) {
-                console.error('Error fetching time data:', error);
-            }
-        }
-
-        function updateTimeDisplayFromCurrentTime() {
-            if (currentTime) {
-                gameTime = currentTime.toLocaleTimeString('en-US', { hour12: false });
-                updateTimeDisplay();
-                currentTime.setSeconds(currentTime.getSeconds() + 1); // Increment by one second
-            }
-        }
-
-        function startSyncing() {
-            fetchTimeFromServer(); // Fetch from API initially
-            setInterval(fetchTimeFromServer, 30000); // Fetch from API every 30 seconds
-            setInterval(updateTimeDisplayFromCurrentTime, 1000); // Update locally every second
-        }
-
-        function playClickSound() {
-            const audio = new Audio('click.mp3');
-            audio.play();
-        }
-
-        window.onload = startSyncing;
-    </script>
+    <title>Countdown Timer</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <div id="clock">00:00:00</div>
+    <div id="countdown-wrapper">
+        <div id="countdown">00:00:00:00</div>
+        <div id="milliseconds">00</div>
+    </div>
 </body>
 </html>

@@ -1,14 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap');
+
 body {
     background-color: black;
-    color: white;
+    color: #b8b8b8;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Oleo Script', cursive, Arial, sans-serif;
 }
 
-#clock {
-    font-size: 8em;
+#countdown-wrapper {
+    text-align: center;
+}
+
+#countdown {
+    font-size: 6em;
+    font-weight: bold;
+    text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
+    line-height: 1.2;
+}
+
+#milliseconds {
+    font-size: 3em;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    margin-top: -20px;
 }

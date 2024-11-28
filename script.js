@@ -1,24 +1,29 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+let countdownTime = 7 * 24 * 60 * 60 * 1000;
 
-let gameTime = "--:--:--";
+function updateCountdownDisplay() {
+    if (countdownTime >= 0) {
+        const days = Math.floor(countdownTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((countdownTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((countdownTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((countdownTime % (1000 * 60)) / 1000);
+        const milliseconds = Math.floor((countdownTime % 1000) / 10);
 
-app.use(express.json());
+        document.getElementById('countdown').innerHTML = 
+            `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        document.getElementById('milliseconds').innerHTML = 
+            `${String(milliseconds).padStart(2, '0')}`;
 
-app.get('/api/time', (req, res) => {
-    res.json({ gameTime: gameTime });
-});
-
-app.post('/api/time', (req, res) => {
-    if (req.body && req.body.gameTime) {
-        gameTime = req.body.gameTime;
-        res.sendStatus(200);
+        countdownTime -= 10;
     } else {
-        res.sendStatus(400);
+        clearInterval(timerInterval);
+        document.getElementById('countdown').innerHTML = "00:00:00:00";
+        document.getElementById('milliseconds').innerHTML = "00";
     }
-});
+}
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+function startCountdown() {
+    updateCountdownDisplay();
+    timerInterval = setInterval(updateCountdownDisplay, 10);
+}
+
+window.onload = startCountdown;
